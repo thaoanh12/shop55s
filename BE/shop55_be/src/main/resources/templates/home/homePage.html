@@ -1,0 +1,140 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<div th:fragment="content">
+    <!--// bannner-->
+    <div>
+        <div id="carouselExampleControls" class="carousel slide" th:attr="data-bs-ride='carousel'">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://img3.thuthuatphanmem.vn/uploads/2019/10/14/banner-thoi-trang-nam-dep_113857194.jpg"
+                         class="d-block w-100 h-50" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://img3.thuthuatphanmem.vn/uploads/2019/10/14/banner-thoi-trang-nam-don-gian_113857210.jpg"
+                         class="d-block w-100 h-50" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://img3.thuthuatphanmem.vn/uploads/2019/10/14/banner-thoi-trang-the-thao-cho-nam_113858272.jpg"
+                         class="d-block w-100 h-50" alt="...">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button"
+                    th:attr="data-bs-target='#carouselExampleControls', data-bs-slide='prev'">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button"
+                    th:attr="data-bs-target='#carouselExampleControls', data-bs-slide='next'">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    <div class="text-center">
+        <h3 th:text="${'THỜI TRANG BÁN CHẠY NHẤT'}"></h3>
+    </div>
+    <style>
+        .card-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+
+        }
+
+        .card {
+            width: 18rem;
+            margin-bottom: 20px;
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 200px; /* Kích thước hình ảnh cố định */
+            object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+        }
+
+
+        .card-body {
+            height: 150px; /* Kích thước cố định cho các thông tin */
+        }
+
+    .card-body {
+        height: 150px; /* Kích thước cố định cho các thông tin */
+    }
+    .card-wrapper .card {
+        position: relative;
+        width: 18rem;
+    }
+
+    .card-wrapper .card:hover .add-to-cart {
+        font-size: 3rem; /* Điều chỉnh kích thước của biểu tượng */
+        color: chocolate;
+        opacity: 1;
+    }
+
+    .add-to-cart {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    </style>
+
+    <div class="container">
+        <div class="card-wrapper">
+            <div th:each="products, iterStat : ${page.content}" th:if="${iterStat.index < 8}" class="col-sm-3">
+                <div class="card" style="width: 18rem;">
+                    <img th:src="@{${products.thumbnail}}" alt="Product Image" width="50px" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${products.productName}"></h5>
+                        <p class="card-text" th:text="${products.minPrice}"></p>
+                    </div>
+<div class="container">
+    <div class="card-wrapper">
+        <div th:each="products, iterStat : ${page.content}" th:if="${iterStat.index < 8}" class="col-sm-3">
+            <div class="card">
+                <div class="image-wrapper">
+                    <img th:src="@{${products.thumbnail}}" alt="Product Image" width="50px" class="card-img-top">
+                    <a th:href="@{/product/{id}(id=${products.id})}" class="add-to-cart"><i class="bi bi-cart-plus-fill"></i></a>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${products.productName}"></h5>
+                    <p class="card-text" th:text="${products.minPrice}"></p>
+                    <input type="hidden" th:value="${products.id}">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <h3 th:text="${'THỜI TRANG MỚI NHẤT'}"></h3>
+    </div>
+    <div class="container">
+        <div class="card-wrapper">
+            <div th:each="products, iterStat : ${page1.content}" th:if="${iterStat.index < 8}" class="col-sm-3">
+                <div class="card" style="width: 18rem;">
+                    <img th:src="@{${products.thumbnail}}" alt="Product Image" width="50px" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${products.productName}"></h5>
+                        <p class="card-text" th:text="${products.minPrice}"></p>
+                    </div>
+<div class="text-center">
+    <h3 th:text="${'THỜI TRANG MỚI NHẤT'}"></h3>
+</div>
+<div class="container">
+    <div class="card-wrapper">
+        <div th:each="products, iterStat : ${page1.content}" th:if="${iterStat.index < 8}" class="col-sm-3">
+            <div class="card" style="width: 18rem;">
+                <img th:src="@{${products.thumbnail}}" alt="Product Image" width="50px" class="card-img-top">
+                <a th:href="@{/product/{id}(id=${products.id})}" class="add-to-cart"><i class="bi bi-cart-plus-fill"></i></a>
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${products.productName}"></h5>
+                    <p class="card-text" th:text="${products.minPrice}"></p>
+                    <input type="hidden" th:value="${products.id}">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+</html>

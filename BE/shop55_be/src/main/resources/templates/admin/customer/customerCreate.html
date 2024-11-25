@@ -1,0 +1,33 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<div th:fragment="content">
+    <h1>Thêm Khách hàng</h1>
+    <div>
+        <form style="width: 60%;background-color: white;border-radius: 10px;
+    padding: 10px " th:action="@{/admin/customer-add}" th:object="${customerCreate}" method="post"
+              class="mx-auto" >
+            <div class="row">
+                <div class="mb-3 col-6">
+                    <label for="exampleInputFullName" class="form-label">Họ và Tên</label>
+                    <input th:value="*{fullName}" name="fullName"  placeholder="-- nhập họ tên -- "  type="text" class="form-control" id="exampleInputFullName">
+                    <p style="color: red" th:if="${#fields.hasErrors('fullName')}" th:errorclass="error"
+                       th:errors="*{fullName}"/>
+                </div>
+                <div class="mb-3 col-6">
+                    <label for="exampleInputEmail" class="form-label">Email</label>
+                    <input  th:value="*{email}" name="email" placeholder="-- nhập email --"  type="email" class="form-control" id="exampleInputEmail">
+                    <p style="color: red" th:if="${#fields.hasErrors('email')}" th:errorclass="error" th:errors="*{email}"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="mb-3 col-6">
+                    <label for="exampleInputSDT" class="form-label">Số điện thoại</label>
+                    <input th:value="*{phoneNumber}" name="phoneNumber"  placeholder="-- nhập số điện thoại --" type="text" class="form-control" id="exampleInputSDT" >
+                    <p style="color: red" th:if="${#fields.hasErrors('phoneNumber')}" th:errorclass="error"
+                       th:errors="*{phoneNumber}"/>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Thêm</button>
+</form>
+    </div>
+</div>
+</html>

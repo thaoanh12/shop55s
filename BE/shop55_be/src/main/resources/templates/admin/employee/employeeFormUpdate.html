@@ -1,0 +1,145 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en" >
+<style>
+    .error{
+        color: red;
+    }
+</style>
+<div th:fragment="content">
+    <h3>Thông tin nhân viên</h3>
+    <form style="width: 60%;background-color: white;border-radius: 10px;
+    padding: 10px " th:action="@{/admin/employee-update/{id}(id=${employeeUpdate.id})}" th:object="${employeeUpdate}"
+          class="mx-auto" method="post">
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="exampleInputFullName" class="form-label">Mã</label>
+                <input th:value="*{employeeCode}" disabled  name="employeeCode"  type="text" class="form-control" id="exampleInputFullName">
+            </div>
+            <div class="mb-3 col-6">
+                <label for="exampleInputFullName" class="form-label">Họ và Tên</label>
+                <input th:value="*{fullName}" name="fullName"  type="text" class="form-control" id="exampleInputFullName">
+                <p th:if="${#fields.hasErrors('fullName')}" th:errorclass="error" th:errors="*{fullName}" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="exampleInputEmail" class="form-label">Email</label>
+                <input disabled  th:value="*{email}"  type="email" class="form-control" id="exampleInputEmail">
+                <input  th:value="*{email}" name="email"  type="hidden" class="form-control" id="exampleInputEmail">
+
+            </div>
+            <div class="mb-3 col-6">
+                <label for="exampleInputSDT" class="form-label">Số điện thoại</label>
+                <input th:value="*{phoneNumber}" name="phoneNumber" type="text" class="form-control" id="exampleInputSDT" >
+                <p th:if="${#fields.hasErrors('phoneNumber')}" th:errorclass="error" th:errors="*{phoneNumber}" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="exampleInputAddress" class="form-label">Địa chỉ</label>
+                <input th:value="*{employeeAddress}" name="employeeAddress" type="text" class="form-control" id="exampleInputAddress">
+                <p th:if="${#fields.hasErrors('employeeAddress')}" th:errorclass="error" th:errors="*{employeeAddress}" />
+            </div>
+            <div class="mb-3 col-6">
+                <label for="exampleInputSDT" class="form-label">Tỉnh/Thành phố</label>
+                <select th:selected="*{city}" name="city"
+                        class="form-select" id="provices" onchange="getProvicese(event.target.value)">
+                    <option value="">--- Tỉnh/Thành phố ---</option>
+                </select>
+                <p th:if="${#fields.hasErrors('city')}" th:errorclass="error" th:errors="*{city}" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label  for="exampleInputAddress" class="form-label">Quân/Huyên/Thi xã</label>
+                <select name="district"
+                        class="form-select" id="district" onchange="getDistrict(event.target.value)">
+                    <option value="">--- /Huyên/Thi xã ---</option>
+                </select>
+                <p th:if="${#fields.hasErrors('district')}" th:errorclass="error" th:errors="*{district}" />
+            </div>
+            <div class="mb-3 col-6">
+                <label for="exampleInputSDT" class="form-label">Xã/Phường/Thị trấn</label>
+                <select th:value="*{commune}"  name="commune" class="form-select" id="commune" >
+                    <option value="">--- Xã/Phường/Thị trấn ---</option>
+                </select>
+                <p th:if="${#fields.hasErrors('commune')}" th:errorclass="error" th:errors="*{commune}" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="exampleInputFullName" class="form-label">Ngày vào làm</label>
+                <input th:value="*{createDate}" name="createDate"  type="date" class="form-control" id="exampleInputFullName">
+                <p th:if="${#fields.hasErrors('createDate')}" th:errorclass="error" th:errors="*{createDate}" />
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<script th:inline="javascript">
+    var empolyee = /*[[${employee}]]*/
+    fetch("http://localhost:3000/province")
+        .then(respones => respones.json())
+        .then(data =>{
+            data.map(value => {
+                const option = document.createElement("option")
+                option.value = value.name
+                option.text = value.name
+                if(empolyee!==null&&value.name === empolyee.city){
+                   option.selected = true
+                    getProvicese(value.name)
+                }
+                document.getElementById("provices").appendChild(option);
+            })
+        })
+
+    function fetchDistrict (idProvince){
+        fetch(`http://localhost:3000/district?idProvince=${idProvince}`)
+            .then(respones => respones.json())
+            .then(data =>{
+                data.map(value => {
+                    const option = document.createElement("option")
+                    option.value = value.name
+                    option.text = value.name
+                    if(empolyee!==null&&empolyee.district === value.name){
+                         option.selected = true;
+                         getDistrict(value.name)
+                    }
+                    document.getElementById("district").appendChild(option)
+                })
+            })
+    }
+    function fetchCommune (idDistrict){
+        fetch(`http://localhost:3000/commune?idDistrict=${idDistrict}`)
+            .then(respones => respones.json())
+            .then(data =>{
+                data.map(value => {
+                    const option = document.createElement("option")
+                    option.value = value.name
+                    option.text = value.name
+                    if(empolyee!==null&&empolyee.commune === value.name){
+                          option.selected = true
+                    }
+                    document.getElementById("commune").appendChild(option)
+                })
+            })
+    }
+    function getProvicese(value){
+        let name = value
+        fetch(`http://localhost:3000/province?name=${name}`)
+            .then(respones => respones.json())
+            .then(data =>{
+                console.log(data)
+               fetchDistrict(data[0].idProvince)
+
+            })
+    }
+    function getDistrict(value){
+        let name = value
+        fetch(`http://localhost:3000/district?name=${name}`)
+            .then(respones => respones.json())
+            .then(data =>{
+                fetchCommune(data[0].idDistrict)
+            })
+    }
+</script>
+</html>

@@ -1,0 +1,113 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en" >
+<style>
+    .error{
+        color: red;
+    }
+</style>
+<div th:fragment="content">
+    <h3>Cập Nhật Màu Sắc</h3>
+    <form th:object="${colors}" style="width: 60%;background-color: white;border-radius: 10px;
+    padding: 10px " th:action="@{/admin/color-update}"
+          class="mx-auto" method="post">
+        <div class="row">
+            <input type="hidden" th:field="*{id}" name="id" class="form-control form-control-color">
+            <div class="mb-3 col-6">
+                <label for="exampleColorInput" class="form-label">Mã Màu</label>
+                <input type="color" name="colorCode" class="form-control form-control-color" id="exampleColorInput"
+                       th:field="*{colorCode}" title="Choose your color">
+                <span th:text="*{colorCode}" style="margin-left: 10px;"></span>
+
+
+            </div>
+            <div class="mb-3 col-6">
+                <label for="exampleInputEmail" class="form-label">Tên Màu</label>
+                <input name="colorName" type="text" class="form-control" id="exampleInputEmail" th:field="*{colorName}">
+                <p th:if="${#fields.hasErrors('colorName')}" class="error" th:errors="*{colorName}"></p>
+
+            </div>
+        </div>
+        <div class="mb-3 col-6">
+            <input class="form-check-input" type="radio" value="0" name="colorStatus" id="flexRadioDefault1" th:checked="${colors.colorStatus == 0}" />
+            <label class="form-check-label" for="flexRadioDefault1">
+                Đang hoạt động
+            </label>
+        </div>
+
+        <div class="mb-3 col-6">
+            <input class="form-check-input" type="radio" value="1" name="colorStatus" id="flexRadioDefault2" th:checked="${colors.colorStatus == 1}" />
+            <label class="form-check-label" for="flexRadioDefault2">
+                Ngừng hoạt động
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Cập Nhật</button>
+    </form>
+</div>
+<script th:inline="javascript">
+    var empolyee = /*[[${newEmpolyee}]]*/
+        fetch("http://localhost:3000/province")
+            .then(respones => respones.json())
+            .then(data =>{
+                data.map(value => {
+                    const option = document.createElement("option")
+                    option.value = value.name
+                    option.text = value.name
+                    if(empolyee!==null&&value.name === empolyee.city){
+                        option.selected = true
+                        getProvicese(value.name)
+                    }
+                    document.getElementById("provices").appendChild(option);
+                })
+            })
+
+    function fetchDistrict (idProvince){
+        fetch(`http://localhost:3000/district?idProvince=${idProvince}`)
+            .then(respones => respones.json())
+            .then(data =>{
+                data.map(value => {
+                    const option = document.createElement("option")
+                    option.value = value.name
+                    option.text = value.name
+                    if(empolyee!==null&&empolyee.district === value.name){
+                        option.selected = true;
+                        getDistrict(value.name)
+                    }
+                    document.getElementById("district").appendChild(option)
+                })
+            })
+    }
+    function fetchCommune (idDistrict){
+        fetch(`http://localhost:3000/commune?idDistrict=${idDistrict}`)
+            .then(respones => respones.json())
+            .then(data =>{
+                data.map(value => {
+                    const option = document.createElement("option")
+                    option.value = value.name
+                    option.text = value.name
+                    if(empolyee!==null&&empolyee.commune === value.name){
+                        option.selected = true
+                    }
+                    document.getElementById("commune").appendChild(option)
+                })
+            })
+    }
+    function getProvicese(value){
+        let name = value
+        fetch(`http://localhost:3000/province?name=${name}`)
+            .then(respones => respones.json())
+            .then(data =>{
+                console.log(data)
+                fetchDistrict(data[0].idProvince)
+
+            })
+    }
+    function getDistrict(value){
+        let name = value
+        fetch(`http://localhost:3000/district?name=${name}`)
+            .then(respones => respones.json())
+            .then(data =>{
+                fetchCommune(data[0].idDistrict)
+            })
+    }
+</script>
+</html>

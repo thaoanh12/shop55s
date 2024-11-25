@@ -1,0 +1,21 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<style>
+    .error {
+        color: red;
+    }
+</style>
+<div th:fragment="content">
+    <h3>Thêm Chất liệu</h3>
+    <form style="width: 60%;background-color: white;border-radius: 10px; padding: 10px"
+          th:action="@{/admin/fabrics-add}" method="post" th:object="${newFabric}" class="mx-auto">
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="exampleColorInput" class="form-label">Tên Vải</label>
+                <input th:field="*{fabricName}" type="text" class="form-control" id="exampleColorInput">
+                <p th:if="${#fields.hasErrors('fabricName')}" class="error" th:errors="*{fabricName}"></p>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Thêm</button>
+    </form>
+</div>
+</html>

@@ -1,0 +1,20 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<div th:fragment="content">
+    <h3>Thông tin nhân viên</h3>
+    <b>Mã: </b><span th:text="${employeeDetail.employeeCode}"></span><br/>
+    <b>Họ và tên: </b><span th:text="${employeeDetail.fullName}"></span><br/>
+    <b>Email: </b><span th:text="${employeeDetail.email}"></span><br/>
+    <b>Số điện thoại: </b><span th:text="${employeeDetail.phoneNumber}"></span><br/>
+    <b>Địa chỉ: </b><span th:text="${employeeDetail.employeeAddress}+'-'+
+    ${employeeDetail.commune}+'-'+${employeeDetail.district}+'-'+${employeeDetail.city}+'-'+${employeeDetail.nation}"></span><br/>
+    <b>Ngày vào làm: </b><span th:text="${employeeDetail.createDate}"></span><br/>
+    <b>Trạng thái: </b>
+    <span>
+        <span th:if="${employeeDetail.employeeStatus == 0}" style="color: green;font-weight: bold;">Còn làm</span>
+        <span th:unless="${employeeDetail.employeeStatus == 0}" style="color: red;font-weight: bold;">Đã nghỉ</span>
+    </span>
+    <br/>
+    <a class="btn btn-danger" href="javascript:history.back()">Trở lại</a>
+</div>
+
+</html>

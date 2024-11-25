@@ -1,0 +1,92 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en" >
+<div th:fragment="content">
+    <h3>Thêm sản phẩm</h3>
+    <form style="width: 60%;background-color: #ffffff;border-radius: 10px;
+    padding: 10px " th:action="@{/admin/product-add}" th:object="${newProduct}"
+          class="mx-auto" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="exampleInputProductName" class="form-label">Tên sản phẩm</label>
+                <input th:value="*{productName}" name="productName"  type="text" class="form-control" id="exampleInputProductName">
+                <p style="color: red" th:if="${#fields.hasErrors('productName')}" th:errorclass="error"
+                   th:errors="*{productName}"/>
+            </div>
+            <div class="mb-3 col-6">
+                <label for="exampleInputNSX" class="form-label">Nới sản xuất</label>
+                <input th:value="*{madeIn}" name="madeIn" type="text" class="form-control" id="exampleInputNSX" >
+                <p style="color: red" th:if="${#fields.hasErrors('madeIn')}" th:errorclass="error" th:errors="*{madeIn}" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="exampleInputSDT" class="form-label">Mô tả</label>
+                <input th:value="*{productDescribe}" name="productDescribe" type="text" class="form-control" id="exampleInputSDT" >
+                <p style="color: red" th:if="${#fields.hasErrors('productDescribe')}" th:errorclass="error" th:errors="*{productDescribe}" />
+            </div>
+            <div class="mb-3 col-6">
+                <label for="exampleInputAddress" class="form-label">Trọng lượng</label>
+                <div class="input-group">
+                <input th:value="*{weight}" name="weight" type="text"
+                       class="form-control" id="exampleInputAddress">
+                    <div class="input-group-text" id="btnGroupAddon">gam</div>
+                 </div>
+                <p style="color: red" th:if="${#fields.hasErrors('weight')}" th:errorclass="error" th:errors="*{weight}" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="exampleInputFileImg" class="form-label">File ảnh</label>
+                <!-- Thêm thuộc tính 'required' để yêu cầu người dùng nhập một file hình ảnh -->
+                <input name="image"
+                       onchange="previewImage()"
+                       type="file" class="form-control" id="exampleInputFileImg" required>
+                <!-- Thêm một thông báo lỗi nếu người dùng không chọn file hình ảnh -->
+                <div class="invalid-feedback">Vui lòng chọn một file hình ảnh.</div>
+            </div>
+            <div class="mb-3 col-6">
+                <img id="preview" th:src="*{thumbnail}" style="margin-top: 20px; width: 70px"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="dropdownCategori">Danh mục:</label>
+                <select class="form-select" id="dropdownCategori"  name="categoryId">
+                    <option th:each="category : ${categoris}"  th:value="${category.id}" th:text="${category.categoryName}"></option>
+                </select>
+            </div>
+            <div class="mb-3 col-6">
+                <label for="dropdownFabric">Chất liệu:</label>
+                <select class="form-select" id="dropdownFabric"  name="fabricId">
+                    <option th:each="fabric : ${fabrics}"  th:value="${fabric.id}" th:text="${fabric.fabricName}"></option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<script>
+    function previewImage(){
+        var inputeFile = document.getElementById("exampleInputFileImg")
+        var preview = document.getElementById("preview")
+        if(inputeFile.files && inputeFile.files[0]){
+            var reader = new FileReader()
+            reader.onload = function (e){
+                preview.src = e.target.result
+            }
+            reader.readAsDataURL(inputeFile.files[0])
+        }
+    }
+    fetch("http://localhost:3000/country").then(res => res.json()).then(data => {
+        let arr  = [...data]
+        console.log(arr)
+        arr.map(value => {
+            var option = document.createElement("option")
+            option.value = value
+            option.text = value
+            document.getElementById("exampleMadeIn").appendChild(option)
+        })
+    })
+</script>
+</html>

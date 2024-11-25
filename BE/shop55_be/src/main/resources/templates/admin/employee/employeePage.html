@@ -1,0 +1,83 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<style>
+    .filter:hover .menu{
+        display: block;
+    }
+</style>
+<div th:fragment="content">
+    <h3>Quản lý nhân viên</h3>
+    <div style="display:flex;">
+        <a th:href="@{/admin/employee-view-add}"  type="button" class="btn btn-success">Thêm nhân viên</a>
+        <form th:action="@{/admin/employee-filter-by-keyword}" method="get" class="d-flex" role="search">
+            <input name="keyword" class="form-control me-2" type="text" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Mã</th>
+            <th scope="col">Họ và tên</th>
+            <th scope="col">Email</th>
+            <th scope="col">Số điện thoại</th>
+            <th scope="col"class="dropdown">
+                Trạng thái
+                <i style="cursor: pointer" class="filter fa-solid fa-filter"
+                   data-bs-toggle="dropdown" aria-expanded="false"></i>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" th:href="@{/admin/employee-filter-by-status(status=3)}">Tất cả</a></li>
+                    <li><a class="dropdown-item" th:href="@{/admin/employee-filter-by-status(status=0)}">Còn Làm</a></li>
+                    <li><a class="dropdown-item" th:href="@{/admin/employee-filter-by-status(status=1)}">Đã nghỉ</a></li>
+                </ul>
+            </th>
+            <th scope="col">Chức năng</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="staff,rowStat : ${page.content}">
+            <td th:text="${rowStat.index}"/>
+            <td th:text="${staff.employeeCode}"></td>
+            <td th:text="${staff.fullName}"></td>
+            <td th:text="${staff.email}"></td>
+            <td th:text="${staff.phoneNumber}"></td>
+            <td>
+                <span th:if="${staff.employeeStatus == 0}" style="color: #008000;font-weight: bold;">Còn làm</span>
+                <span th:unless="${staff.employeeStatus == 0}" style="color: red;font-weight: bold;">Đã nghỉ</span>
+            </td>
+            <td>
+                <a th:href="@{/admin/employee-detail/{id}(id=${staff.id})}" id="detail" type="button" class="btn btn-warning" >
+                    <i class="fa-solid fa-eye"></i>
+                </a>
+                <a th:if="${staff.employeeStatus != 1}" th:href="@{/admin/employee-layoff/{id}(id=${staff.id})}"
+                   onclick="return confirm('Bạn muốn thôi việc nhân viên này')" type="button" class="btn btn-danger">
+                    <i class="fa-solid fa-user-minus"></i>
+                </a>
+            </td>
+        </tr>
+        <tr th:if="${size == 0}">
+            <td colspan="7"style="text-align: center"><b>Không có nhân viên</b></td>
+        </tr>
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example" >
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" th:href="@{${url}(p=${page.number - 1 < 0 ? page.totalPages - 1 : page.number - 1})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="number : ${#numbers.sequence(0,page.totalPages-1)}">
+                <a th:if="${number >= 0}" class="page-link" th:href="@{${url}(p=${number})}"th:text="${number+1}"></a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:href="@{${url}(p=${page.number + 1 > page.totalPages - 1 ? 0 : page.number + 1})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+
+</div>
+</html>

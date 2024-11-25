@@ -1,0 +1,109 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<div th:fragment="content">
+    <h1>Hóa Đơn Cần Xác Nhận   </h1>
+
+    <div style="margin-top: 20px">
+        <div>
+            <h4 style="color: #ffba30">thông tin hóa đơn </h4>
+            <p><b>mã hóa đơn : </b><span th:text="${orderDetailT.orderCode}"></span></p>
+            <p><b>thời gian tạo :</b> <span th:text="${orderDetailT.createDate}"></span></p>
+            <p><b>tên khách hàng :</b> <span th:text="${orderDetailT.customer == null ? 'Khách Lẻ':orderDetailT.customer.fullName}"></span></p>
+            <p> <b>nhân viên tạo :</b> <span th:text="${orderDetailT.employee.fullName}"></span></p>
+            <p> <b>trạng thái :</b>
+                <span th:if="${orderDetailT.orderStatus==1}"
+                      style="color: green;font-weight: bold;">đã thanh toán  </span>
+                <span th:if="${orderDetailT.orderStatus==0}" style="color: #dd1e1e;font-weight: bold;">chưa thanh toán  </span>
+            </p>
+        </div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Mã sản phẩm</th>
+            <th scope="col">Tên</th>
+            <th scope="col">Chất liệu</th>
+            <th scope="col">Màu sắc</th>
+            <th scope="col">kích thước</th>
+            <th scope="col">Số lượng</th>
+            <th scope="col">Giá sản phẩm</th>
+            <th scope="col">Giá sản sau giảm</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="orderDetai , rowstart : ${orderDetail}">
+            <th scope="row" th:text="${rowstart.index + 1}"></th>
+            <td  th:text="${orderDetai.productDetail.productDetailCode}"></td>
+            <td  th:text="${orderDetai.productDetail.products.productName}"></td>
+            <td  th:text="${orderDetai.productDetail.products.fabric.fabricName}"></td>
+            <td  th:text="${orderDetai.productDetail.color.colorName}"></td>
+            <td  th:text="${orderDetai.productDetail.size.sizeName}"></td>
+            <td  th:text="${orderDetai.productDetail.quantity}"></td>
+            <td  th:text="${orderDetai.productDetail.price}"></td>
+            <td  th:text="${orderDetai.totalAmount}"></td>
+            <td >
+                <button>hihi</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form th:action="@{/admin/order-confim-status/{id}(id=${orderDetailT.id})}" method="post">
+        <input type="hidden" th:value="${orderDetailT.id}" name="orderId">
+        <p>tiền hàng : <b th:text="${sumProduct + ' vnđ'}"></b> </p>
+        <input id="sumProduct" th:value="${sumProduct}" type="hidden">
+        <p>tiền ship : <input id="ship" type="number" name="ship" oninput="addNumbers()" required></p>
+        <p>tổng tiền hàng : <b id="sumOrrder" ></b> </p>
+        <button type="submit"  onclick="confimhihi()" class="btn btn-primary">xác nhận </button>
+    </form>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script th:inline="javascript">
+    var error = /*[[${erorder}]]*/ '';
+    if (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi',
+            text: error
+        });
+    }
+</script>
+<script th:inline="javascript">
+    var success = /*[[${success}]]*/ '';
+    if (success) {
+        Swal.fire({
+            icon: 'success',
+            title: 'thành công ',
+            text: success
+        });
+    }
+</script>
+<script th:inline="javascript">
+    function addNumbers() {
+        var num1 = parseInt(document.getElementById('sumProduct').value);
+        var num2 = parseInt(document.getElementById('ship').value);
+        var sum = num1 + num2;
+        document.getElementById('sumOrrder').innerText =  sum +' vnđ';
+    }
+    // function confimhihi(){
+    //     alert("xác nhận thành công hóa đơn !!")
+    // }
+
+
+</script>
+
+
+
+<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+        crossorigin="anonymous"></script>
+
+
+
+
+</html>

@@ -1,0 +1,600 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<style>
+    /*.unpaid-invoice {*/
+    /*    width: 90%;*/
+    /*}*/
+
+    .card {
+        position: relative;
+        border: 1px solid #ccc;
+        margin-bottom: 30px;
+        padding: 10px;
+    }
+
+    .title {
+        width: 110px;
+        position: absolute;
+        top: -13px;
+        background-color: #e8e8e8;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    #frame-unpaid-invoice {
+        width: 100%;
+    }
+
+    .camera {
+        height: 220px;
+    }
+
+    .tile-order {
+        font-weight: bold;
+    }
+
+    .orderTrTag:hover {
+        cursor: pointer;
+    }
+
+    .deleteOrder:hover {
+        color: red;
+    }
+
+    .deleteOrder {
+        font-size: 12px;
+        color: black;
+    "
+    }
+</style>
+<div th:fragment="content">
+    <div class="row">
+        <div class="unpaid-invoice card">
+            <span class="title">Hóa đơn chờ</span>
+            <div class="row">
+                <div id="frame-unpaid-invoice" class="col-10">
+                    <table class="table-unpaid-invoice  table table-hover ">
+                        <tbody style="display: flex">
+                        <tr class="orderTrTag" style="border-right: 1px solid black"
+                            th:each="order1,rowStart :${orders}" th:id="order+${order1.id}"
+                            th:onclick="'chooseOrder(' + ${order1.id} + ')'">
+                            <td th:text="${order1.orderCode}"></td>
+                            <td>
+                                <a type="button" class="deleteOrder"
+                                   th:href="@{/admin/sales/order-remove/{id}(id=${order1.id})}"
+                                ><i class="fa-solid fa-x"></i></a>
+                            </td>
+                        </tr>
+                        <tr onclick="handleCreateOrder()">
+                            <td><i class="fa-solid fa-plus"></i></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="camera row" style="width: 100%;height: 220px;">
+                <div class="col-6">
+                    <video id="videoElement" style="width: 100%;height: 220px;" autoplay></video>
+                </div>
+                <div class="col-6">
+                    <button style="float: right" type="button" onclick="productModalChon()" class="btn btn-primary"
+                            data-bs-backdrop="static" data-bs-keyboard="false"
+                            id="button-product" data-bs-target="#modalProduct">Chọn sản phẩm
+                    </button>
+                    <div class="modal fade" id="modalProduct" tabindex="-1" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-xl	">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Danh sách sản phẩm </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close">
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="product-detail card">
+                                        <span class="title">Sản phẩm</span>
+                                        <form>
+                                            <div class="form-container">
+                                                <div class="options-container">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Màu sắc</label>
+                                                        <select id="color" name="color" class="form-select"
+                                                                aria-label="Default select example">
+                                                            <option value="" selected>--- Chọn màu ---</option>
+                                                            <option th:each="color : ${colors}" th:value="${color.id}"
+                                                                    th:text="${color.colorName}"></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Kích cỡ</label>
+                                                        <select id="size" name="size" class="form-select"
+                                                                aria-label="Default select example">
+                                                            <option value="" selected>--- Chọn kích cỡ</option>
+                                                            <option th:each="size : ${sizes}" th:value="${size.id}"
+                                                                    th:text="${size.sizeName}"></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="search-container">
+                                                    <div class="col-6">
+                                                        <label class="form-label">Tìm Kiếm</label>
+                                                        <input id="keyword" type="text" name="keyword" style="width: 350px;">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <button onclick="searchProduct()" type="submit" class="btn btn-primary btn-search">
+                                                            Submit
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <table class="table table-hover">
+                                            <p style="color: red ; text-align: right ;font-size: 18px;
+                                                             font-weight: bold;" th:text="${error}"></p>
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Mã sản phẩm</th>
+                                                <th scope="col">Tên</th>
+                                                <th scope="col">Chất liệu</th>
+                                                <th scope="col">Màu sắc</th>
+                                                <th scope="col">kích thước</th>
+                                                <th scope="col">Số lượng</th>
+                                                <th scope="col">Giá sản phẩm</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="ProductDetailAfterDiscount,rowstat : ${orderProduct.content}">
+                                                <th scope="row" th:text="${rowstat.index + 1}"></th>
+                                                <td th:text="${ProductDetailAfterDiscount.productDetailCode}"></td>
+                                                <td th:text="${ProductDetailAfterDiscount.products.productName}"></td>
+                                                <td th:text="${ProductDetailAfterDiscount.products.fabric.fabricName}"></td>
+                                                <td th:text="${ProductDetailAfterDiscount.color.colorName}"></td>
+                                                <td th:text="${ProductDetailAfterDiscount.size.sizeName}"></td>
+                                                <td th:text="${ProductDetailAfterDiscount.quantity}"></td>
+                                                <td th:text="${#numbers.formatDecimal(ProductDetailAfterDiscount.price,3,'POINT' , 2 , 'COMMA')} + ' VNĐ'"></td>
+                                                <td>
+                                                    <a type="button" class="btn btn-primary k"
+                                                       data-backdrop="static" data-keyboard="false"
+                                                       id="productButtonHi"
+                                                       th:href="@{/admin/sales/order-detail-create/{id}(id=${orderId}, code=${ProductDetailAfterDiscount.productDetailCode})}">
+                                                        Chọn
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <!--phân trang -->
+                                        <nav aria-label="Page navigation example">
+                                            <ul class="pagination">
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       th:href="@{${url}(p=${page.number - 1 < 0 ? 0 : page.number - 1})}"
+                                                       aria-label="Previous">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item"
+                                                    th:each="number : ${#numbers.sequence(0,page.totalPages-1)}">
+                                                    <a th:if="${number >= 0 }" class="page-link"
+                                                       th:href="@{${url}(p=${number})}"
+                                                       th:text="${number+1}"></a>
+                                                </li>
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       th:href="@{${url}(p=${page.number + 1 >= page.totalPages ? page.totalPages - 1 : page.number + 1})}"
+                                                       aria-label="Next">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cart card" style="margin-top: 30px">
+                <table class="table table-hover">
+                    <span class="title">Giỏ hàng </span>
+                    <div th:if="${successMessage}" class="alert alert-success" role="alert"
+                         th:text="${successMessage}"></div>
+                    <thead>
+
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Mã sản phẩm</th>
+                        <th scope="col">Tên chất liệu</th>
+                        <th scope="col">Màu sắc</th>
+                        <th scope="col">Kích cỡ</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Giá sản phẩm</th>
+                        <th scope="col">Đơn giá</th>
+                        <th scope="col">Chức năng</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="order,rowStat : ${oderDetail}">
+                        <td th:text="${rowStat.index+1}"/>
+                        <td th:text="${order.productDetail.productDetailCode}"></td>
+                        <td th:text="${order.productDetail.products.fabric.fabricName}"></td>
+                        <td th:text="${order.productDetail.color.colorName}"></td>
+                        <td th:text="${order.productDetail.size.sizeName}"></td>
+                        <td>
+                            <input type="number"
+                                   id="valueProduc" oninput="showData()"
+                                   th:value="${order.quantity}" style="width: 50px;" name="quantity">
+                            <input type="hidden" th:value="${order.quantity}" id="valueProducs">
+                        </td>
+                        <td th:text="${#numbers.formatDecimal(order.productDetail.price,1,'POINT',0,'COMMA')}+' VND'"></td>
+                        <td th:text="${#numbers.formatDecimal(order.totalAmount,1,'POINT',0,'COMMA')}+' VND'"></td>
+                        <td>
+                            <form th:action="@{/admin/sales/order-update-product-detail/{id}(id=${order.id})}"
+                                  method="post">
+                                <input type="hidden" id="codeProduct" name="code"
+                                       th:value="${order.productDetail.productDetailCode}">
+                                <input type="hidden" name="idOrderDetail" th:value="${order.id}">
+                                <input type="hidden" name="quantity" id="input2hhh">
+                                <button id="update" type="submit"
+                                        th:onclick="'updateProductInCart(' + (${order.productDetail.quantity + 1}) + ',' + ${order.id} + ')'"
+                                        class="btn btn-success">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                            </form>
+                            <form th:action="@{/admin/sales/order-delete-product-detail/{id}(id=${order.id})}">
+                                <input type="hidden" name="productCodes"
+                                       th:value="${order.productDetail.productDetailCode}">
+                                <input type="hidden" name="quantity" th:value="${order.quantity}">
+                                <button type="submit">
+                                    <a
+                                            id="delete" type="button"
+                                            class="btn btn-danger"
+                                            onclick="return confirm('Bạn muốn xóa sản phẩm này')">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </button>
+                            </form>
+
+                        </td>
+                    </tr>
+                    <tr th:if="${oderDetail == null||oderDetail.size == 0}">
+                        <td colspan="9" style="text-align: center"><b>Không có sản phẩm</b></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-4">
+
+            <div class="order card">
+                <span class="title">Hóa đơn</span>
+                <form style="margin: 20px" id="orderForm" th:action="@{/admin/sales/order-pay}" th:object="${order}"
+                      method="post">
+                    <input name="id" type="hidden" th:if="${order != null}" th:value="*{id}">
+                    <div class="mb-3 col-12">
+                        <label for="orderCode" class="form-label tile-order">Mã hóa đơn: </label>
+                        <span th:if="${order !=null}">
+                            <span id="orderCode" th:text="${order.orderCode}"></span>
+                                <input name="orderCode" type="hidden" th:value="*{orderCode}">
+                        </span>
+                    </div>
+                    <div class="mb-3 col-12">
+                        <label class="form-label tile-order">Nhân Viên: </label>
+                        <span th:if="${order!=null && order.employee != null}">
+                            <span th:text="${order.employee .fullName}"></span>
+                            <input name="employeeId" type="hidden" th:value="*{employee.id}">
+                        </span>
+
+                    </div>
+                    <div class="mb-3 col-12">
+                        <input type="text" placeholder="Nhập số điện thoại" name="customerPhone" id="customerPhone">
+                        <button onclick="filterCustomer()">Tìm kiếm</button>
+                        <!--                        <button type="button" class="btn btn-primary button-model" style="height: 39px;-->
+                        <!--                        width: 39px;border-radius: 50%;" data-bs-toggle="modal" data-bs-target="#exampleModalkh">-->
+                        <!--                            <i class="fa-solid fa-plus"></i>-->
+                        <!--                        </button>-->
+                        <br/>
+                        <label for="customerName" class="form-label tile-order">Khách hàng: </label>
+                        <span id="customerName"></span>
+                        <input type="hidden" name="customerId" id="customerId" value="0">
+                    </div>
+                    <div class="mb-3 col-12">
+                        <label for="totalAmount" class="form-label tile-order" th:for="totalAmount">Mã giảm giá</label>
+                        <input class="form-control" name="discountCode"></input>
+                    </div>
+                    <div class="mb-3 col-12">
+                        <label for="totalAmount" class="form-label tile-order" th:for="totalAmount">Tổng tiền</label>
+                        <span th:if="${order!=null}"
+                              th:text="${#numbers.formatDecimal(order.totalAmount,1,'POINT',0,'COMMA')+' VND'}"></span>
+                        <p id="totalAmount" th:if="${order!=null}" th:text="${order.totalAmount}"
+                           style="display: none"></p>
+                    </div>
+                    <div class="mb-3 col-12">
+                        <label for="tienKhachDua" class="form-label tile-order">Tiền khách đưa</label>
+                        <div class="input-group">
+                            <input id="tienKhachDua" oninput="caculate()" type="text" class="form-control"
+                                   placeholder="Nhập tiền khách đưa" aria-label="Input group example"
+                                   aria-describedby="btnGroupAddon">
+                            <div class="input-group-text" id="btnGroupAddon">VND</div>
+                        </div>
+                    </div>
+                    <div class="mb-3 col-12">
+                        <label id="lTienThua" class="form-label tile-order ">Tiền thừa: </label>
+                        <span id="tienThua"></span>
+                    </div>
+                    <div class="mb-3 col-12">
+                        <button id="btn-pay" type="button" onclick="validateOrder()" class="btn btn-success">Thanh toán
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal khach hang-->
+<div class="modal fade" id="exampleModalkh" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Thêm khách hàng</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3 col-12">
+                        <label for="orderCode" class="form-label tile-order">Số điện thoại </label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-3 col-12">
+                        <label for="orderCode" class="form-label tile-order">Họ và tên </label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script th:inline="javascript">
+    var success = /*[[${hihi}]]*/ '';
+    if (success) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công',
+            text: success
+        });
+    }
+</script>
+<script th:inline="javascript">
+    var success = /*[[${hihi1}]]*/ '';
+    if (success) {
+        Swal.fire({
+            icon: 'error',
+            title: 'thất bại ',
+            text: success
+        });
+    }
+</script>
+<script th:inline="javascript">
+    var success = /*[[${hihi2}]]*/ '';
+    if (success) {
+        Swal.fire({
+            icon: 'error',
+            title: 'thất bại ',
+            text: success
+        });
+    }
+</script>
+<script th:inline="javascript">
+    var success = /*[[${erCreateProduct}]]*/ '';
+    if (success) {
+        Swal.fire({
+            icon: 'error',
+            title: 'thất bại ',
+            text: success
+        });
+    }
+</script>
+<script th:inline="javascript">
+    const video = document.getElementById('videoElement');
+    var order = /*[[${order}]]*/
+    var orderTrtag = document.getElementsByClassName("orderTrTag");
+    var frameUnpaidInvoice = document.getElementById("frame-unpaid-invoice")
+
+    // function updateProductInCart(maxQuantity, OrderDetailId) {
+    //     var value = document.getElementById("valueProduc").value;
+    //     var codeProduct = document.getElementById("codeProduct").value;
+    //     var values = document.getElementById("valueProducs").value;
+    //     var sumk = value - values;
+    //
+    //     if (value < 1) {
+    //         alert("Số lượng phải lớn hơn 0");
+    //         return;
+    //     } else if (sumk > maxQuantity) {
+    //         alert("Số lượng còn lại không đủ");
+    //         return;
+    //     }
+    //     // $.ajax({
+    //     //     type: "POST",
+    //     //     url: "/admin/sales/order-update-product-detail/" + OrderDetailId + "?quantity=" + value + "&code=" + codeProduct,
+    //     //     success: function (response) {
+    //     //         alert("sửa số lượng thành công ");
+    //     //
+    //     //     },
+    //     //     error: function (error) {
+    //     //         alert("sửa số lượng thất bại ")
+    //     //
+    //     //     }
+    //     // });
+    //
+    //
+    // }
+
+    function showData() {
+        var input1Value = document.getElementById("valueProduc").value;
+        document.getElementById("input2hhh").value = input1Value;
+    }
+
+    function chooseOrder(id) {
+        window.location.href = "/admin/sales/order/" + id;
+    }
+
+    navigator.mediaDevices.getUserMedia({video: true})
+        .then(function (stream) {
+            video.srcObject = stream;
+            const scanner = new Instascan.Scanner({video: video});
+            scanner.addListener('scan', function (content) {
+                console.log(content)
+                window.location.href = "/admin/sales/order-detail-create/" + order.id + "?code=" + content + "&qnt=1"
+                document.getElementById('productName').value = content;
+            });
+
+            Instascan.Camera.getCameras().then(function (cameras) {
+                if (cameras.length > 0) {
+                    scanner.start(cameras[0]);
+                } else {
+                    console.error('No cameras found.');
+                }
+            }).catch(function (error) {
+                console.error('Error accessing cameras:', error);
+            });
+        })
+        .catch(function (error) {
+            console.error('Error accessing the camera:', error);
+        });
+
+    function handleCreateOrder() {
+        if (orderTrtag.length == 10) {
+            alert("Chỉ có thể tạo tối đa 10 hóa đơn chờ")
+        } else {
+            window.location.href = '/admin/sales/order-add'
+        }
+    }
+
+    var customers = /*[[${customers}]]*/
+    var btnx = document.getElementsByClassName("k");
+    var modalx = document.getElementsByClassName("m");
+
+    if (order != null) {
+        document.getElementById('button-product').setAttribute('data-bs-toggle', 'modal')
+        Array.from(modalx).map((modal, index) => {
+            btnx[index].setAttribute('data-bs-toggle', 'modal')
+            btnx[index].setAttribute('data-bs-target', '#' + modal.id)
+            document.getElementById("customerName").innerText =
+                order.customer == null ? "Khách lẻ" : order.customer.fullName;
+        })
+    }
+    var isOpen = /*[[${isOpen}]]*/
+    if (isOpen === true) {
+        $(document).ready(function () {
+            $('#modalProduct').modal('show');
+        });
+    }
+
+    function productModalChon() {
+        if (order === null) {
+            alert("bạn chưa chọn hóa đơn !! ")
+            $('#modalProduct').modal({backdrop: 'static', keyboard: false})
+
+        } else {
+            $.ajax({
+                type: "GET",
+                url: "/admin/sales/isClick?isOpen=true",
+            });
+        }
+    }
+
+    function caculate() {
+        var input = document.getElementById('tienKhachDua').value
+        var b = parseFloat(input === '' ? 0 : input);
+        var a = parseFloat(document.getElementById('totalAmount').innerText)
+        document.getElementById("tienThua").innerHTML = b - a < 0 ? "Không đủ" : (b - a).toLocaleString("vi-VN") + ' VND'
+    }
+
+    function filterCustomer() {
+        event.preventDefault()
+        var inputValue = document.getElementById("customerPhone").value
+        var currentCustomer = customers.find(customer => customer.phoneNumber === inputValue);
+        if (currentCustomer === undefined) {
+            alert("Không tìm thấy")
+        } else {
+            document.getElementById("customerName").innerText = currentCustomer.fullName
+            document.getElementById("customerId").value = currentCustomer.id
+        }
+    }
+
+    function validateOrder() {
+        var input = document.getElementById('tienKhachDua').value
+        var b = parseFloat(input === '' ? 0 : input);
+        var a = parseFloat(document.getElementById('totalAmount').innerText)
+        if (b - a < 0)
+            alert("Thanh toán thât bại. Tiền khách đưa không đủ")
+        else if (input === '')
+            alert("Thanh toán thât bại. Chưa nhập tiền khách đưa")
+        else {
+            $.ajax({
+                type: "POST",
+                url: "/admin/sales/order-pay",
+                data: $("#orderForm").serialize(), // Gửi dữ liệu từ form
+                success: function (response) {
+                    alert("Thành công")
+                    window.location.href = "/admin/sales"
+                },
+                error: function (error) {
+                    console.error("Lỗi khi gửi dữ liệu lên server", error);
+                }
+            });
+        }
+    }
+
+    var trTaget = document.getElementById("order" + order.id)
+    if (order != null) {
+        lasyScroll(0)
+        trTaget.className = 'orderTrTag table-info'
+    }
+
+    function lasyScroll(index) {
+        if (index <= trTaget.offsetTop) {
+            setTimeout(() => {
+                frameUnpaidInvoice.scrollTop = index
+                lasyScroll(index + 50)
+            }, 50)
+        }
+    }
+    function searchProduct() {
+        var keyword = document.getElementById("keyword").value;
+        var color = document.getElementById("color").value;
+        var size = document.getElementById("size").value;
+
+        // Gửi yêu cầu tìm kiếm đến máy chủ
+        $.ajax({
+            type: "GET",
+            url: "/admin/sales/product-search/" + order.id + "?colorid="+color +"&sizeId="+size +"&kywordText="+ keyword,
+            success: function(response) {
+                // Cập nhật nội dung modal với kết quả tìm kiếm trả về từ máy chủ
+                // Ví dụ: Update modal content with search results
+            },
+            error: function(error) {
+                console.error("Lỗi khi gửi yêu cầu tìm kiếm", error);
+            }
+        });
+    }
+
+
+</script>
+<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+        crossorigin="anonymous"></script>
+</html>

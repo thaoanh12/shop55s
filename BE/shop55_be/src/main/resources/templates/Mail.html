@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img src="https://res.cloudinary.com/dbxcrlj9c/image/upload/v1703009163/web_ban_quan_ao_nam/zin86q8zoml9iyaxiv8w.png" alt="ảnh shop55"/>
+        <h1>Xin chào, <span th:text="${fullName}"></span></h1>
+    </div>
+    <p>Chúng tôi gửi thông tin truy cập hệ thống của bạn:</p>
+    <p><strong>Mật khẩu truy cập tạm thời:</strong> <span th:text="${password}"></span></p>
+    <p>Bạn vui lòng đổi lại để đảm bảo an toàn thông tin.</p>
+    <p>Đây là email tự động vui lòng không trả lời.</p>
+</div>
+</body>
+</html>

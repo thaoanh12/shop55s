@@ -1,0 +1,71 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en" >
+<style>
+    .error{
+        color: red;
+    }
+</style>
+<div th:fragment="content">
+    <h3>Thêm sản phẩm</h3>
+    <form style="width: 60%;background-color: #ffffff;border-radius: 10px;
+    padding: 10px " th:action="@{/admin/product-detail-update}" th:object="${newProductDetail}"
+          class="mx-auto" method="post" enctype="multipart/form-data">
+        <input th:value="*{id}" name="id"  type="hidden"  >
+        <input th:value="*{barCode}" name="barCode"  type="hidden"  >
+        <input th:value="*{productDetailCode}" name="productDetailCode"  type="hidden"  >
+        <input th:value="*{thumbnail}" name="thumbnail"  type="hidden"  >
+        <input th:value="*{products.id}" name="productId"  type="hidden" class="form-control" >
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="exampleInputProductName" class="form-label">Giá</label>
+                <input th:value="*{price}" name="price"  type="text" class="form-control" id="exampleInputProductName">
+                <p th:if="${#fields.hasErrors('price')}" th:errorclass="error" th:errors="*{price}" />
+            </div>
+            <div class="mb-3 col-6">
+                <label for="exampleInputEmail" class="form-label">Số lượng</label>
+                <input th:value="*{quantity}" name="quantity"  type="text" class="form-control" id="exampleInputEmail">
+                <p th:if="${#fields.hasErrors('quantity')}" th:errorclass="error" th:errors="*{quantity}" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="exampleInputFileImg" class="form-label">File ảnh</label>
+                <input name="image"
+                       onchange="previewImage()"
+                       type="file" class="form-control" id="exampleInputFileImg">
+            </div>
+            <div class="mb-3 col-6">
+                <img id="preview" th:src="*{thumbnail}" style="margin-top: 20px;
+    width: 70px"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="dropdownCategori">Màu sắc:</label>
+                <select class="form-select" id="dropdownCategori"  name="colorId">
+                    <option th:each="color : ${colors}"  th:value="${color.id}" th:text="${color.colorName}"></option>
+                </select>
+            </div>
+            <div class="mb-3 col-6">
+                <label for="dropdownFabric">Kích thước:</label>
+                <select class="form-select" id="dropdownFabric"  name="sizeId">
+                    <option th:each="size : ${sizes}"  th:value="${size.id}" th:text="${size.sizeName}"></option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" style="margin-top: 32px;
+    margin-left: 1px " class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<script>     function previewImage(){
+    var inputeFile = document.getElementById("exampleInputFileImg")
+    var preview = document.getElementById("preview")
+    if(inputeFile.files && inputeFile.files[0]){
+        var reader = new FileReader()
+        reader.onload = function (e){
+            preview.src = e.target.result
+        }
+        reader.readAsDataURL(inputeFile.files[0])
+    }
+}</script>
+</html>

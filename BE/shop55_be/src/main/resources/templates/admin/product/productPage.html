@@ -1,0 +1,58 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<div th:fragment="content">
+    <h1>Sản phẩm</h1>
+
+    <div style="display:flex;">
+        <a th:href="@{/admin/product-view-add}"  type="button" class="btn btn-success">Thêm sản phẩm </a>
+        <form th:action="@{/admin/product-search}" method="get" class="d-flex" role="search">
+            <input name="keyword" class="form-control me-2" type="text" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Anh</th>
+            <th scope="col">Mã</th>
+            <th scope="col">Tên</th>
+            <th scope="col">Chức năng</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product,rowStat : ${page.content}">
+            <td th:text="${rowStat.index+1}"/>
+            <td><img th:src="${product.thumbnail}" width="50px"></td>
+            <td th:text="${product.productCode}"></td>
+            <td th:text="${product.productName}"></td>
+            <td>
+                <a th:href="@{/admin/productDetail/{id}(id=${product.id})}" id="detail" type="button" class="btn btn-warning" >
+                    <i class="fa-solid fa-eye"></i>
+                </a>
+                <a th:href="@{/admin/product-view-update/{id}(id=${product.id})}" id="update" type="button" class="btn btn-success" >
+                    <i class="fa-solid fa-pen"></i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example" >
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" th:href="@{/admin/product(p=${page.number - 1 < 0 ? page.totalPages - 1 : page.number - 1})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="number : ${#numbers.sequence(0,page.totalPages-1)}">
+                <a class="page-link" th:href="@{/admin/product(p=${number})}"th:text="${number+1}"></a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:href="@{/admin/product(p=${page.number + 1 > page.totalPages - 1 ? 0 : page.number + 1})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</html>

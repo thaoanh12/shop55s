@@ -1,0 +1,16 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<div th:fragment="content">
+    <h3>Thông tin Màu Sắc</h3>
+    <b>Mã Chất Liệu: </b><span th:text="${DetailFC.id}"></span><br/>
+    <b>Tên Chất Liệu: </b><span th:text="${DetailFC.fabricName}"></span><br/>
+    <b>Ngày tạo: </b><span th:text="${DetailFC.createDate}"></span><br/>
+    <b>Trạng thái: </b>
+    <span>
+        <span th:if="${DetailFC.fabricStatus == 0}" style="color: green;font-weight: bold;">Đang Hoạt Động</span>
+        <span th:unless="${DetailFC.fabricStatus == 0}" style="color: red;font-weight: bold;">Ngừng Hoạt Động</span>
+    </span>
+    <br/>
+    <a class="btn btn-danger" href="javascript:history.back()">Trở lại</a>
+</div>
+
+</html>

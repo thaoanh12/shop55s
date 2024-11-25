@@ -1,0 +1,126 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<div th:fragment="content">
+    <h3>Thông tin Sản phẩm</h3>
+    <a th:href="@{/admin/product-detail-view-add/{id}(id=${productId})}" type="button" class="btn btn-success">Thêm sản
+        phẩm</a>
+    <div>
+        <style>
+            .form-container {
+                display: flex;
+                flex-direction: row;
+                margin-top: 30px;
+            }
+
+            .search-container {
+                flex: 1;
+                padding-left: 100px;
+
+            }
+
+            .options-container {
+                width: 300px;
+                padding-right: 20px;
+                margin-left: 100px;
+            }
+            .btn-search {
+               margin-top: 50px;
+            }
+        </style>
+        <form th:action="@{/admin/productDetail/{id}(id=${id})}" >
+            <div class="form-container">
+                <div class="options-container">
+                    <div class="mb-3">
+                        <label class="form-label">Màu sắc</label>
+                        <select name="color" class="form-select" aria-label="Default select example">
+                            <option value="" selected>--- Chọn màu ---</option>
+                            <option th:each="color : ${colors}" th:value="${color.id}" th:text="${color.colorName}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kích cỡ</label>
+                        <select name="size" class="form-select" aria-label="Default select example">
+                            <option value="" selected>--- Chọn kích cỡ</option>
+                            <option th:each="size : ${sizes}" th:value="${size.id}" th:text="${size.sizeName}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="search-container">
+                    <div class="col-6">
+                        <label class="form-label">Tìm Kiếm</label>
+                        <input type="text" name="keyword" style="width: 350px;">
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary btn-search">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Mã</th>
+            <th scope="col">Ảnh</th>
+            <th scope="col">Tên</th>
+            <th scope="col">
+                Số lượng
+            </th>
+            <th scope="col">
+                Giá bán
+                <a th:href="@{${urlSortAndFileter}(sort=1)}"><i class="fa-solid fa-arrow-up-long"></i></a>
+                <a th:href="@{${urlSortAndFileter}(sort=2)}"><i class="fa-solid fa-arrow-down-long"></i></a>
+            </th>
+            <th scope="col" class="dropdown">
+                Kích thước
+            </th>
+            <th scope="col" class="dropdown">
+                Màu sắc
+            </th>
+            <th scope="col">Chức năng</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="productDetail,rowStat : ${page.content}">
+            <td th:text="${rowStat.index+1}"/>
+            <td th:text="${productDetail.productDetailCode}"></td>
+            <td><img th:src="${productDetail.thumbnail}" width="50px"></td>
+            <td th:text="${productDetail.products.productName}"></td>
+            <td th:text="${productDetail.quantity}"></td>
+            <td th:text="${#numbers.formatDecimal(productDetail.price,3,'POINT',2,'COMMA')}"></td>
+            <td th:text="${productDetail.size.sizeName}"></td>
+            <td th:text="${productDetail.color.colorName}"></td>
+            <td>
+                <a th:href="@{/admin/product-detail/{id}(id=${productDetail.id})}" id="detail" type="button"
+                   class="btn btn-warning">
+                    <i class="fa-solid fa-eye"></i>
+                </a>
+                <a th:href="@{/admin/product-detail-view-update/{id}(id=${productDetail.id})}" id="detail" type="button"
+                   class="btn btn-success">
+                    <i class="fa-solid fa-pen"></i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example" >
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" th:href="@{${url}(p=${page.number - 1 < 0 ? page.totalPages - 1 : page.number - 1})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="number : ${#numbers.sequence(0,page.totalPages-1)}">
+                <a th:if="${number >= 0}" class="page-link" th:href="@{${url}(p=${number})}"th:text="${number+1}"></a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:href="@{${url}(p=${page.number + 1 > page.totalPages - 1 ? 0 : page.number + 1})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <a class="btn btn-danger" href="javascript:history.back()">Trở lại</a>
+</div>
+
+</html>

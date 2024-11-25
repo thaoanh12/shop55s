@@ -1,0 +1,71 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<div th:fragment="content">
+
+    <h1>Thông tin khuyến mãi chi tiết</h1>
+    <div>
+        <form th:action="@{/admin/discount-update}" th:object="${discount}" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">ID : </span>
+                        <input type="text" th:value="*{id}" name="id" readonly class="form-control"
+                               aria-label="Username"
+                               aria-describedby="basic-addon1" >
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Mã khuyến mãi  : </span>
+                        <input type="text" th:value="*{discountCode}" readonly name="discountCode" class="form-control"
+                               aria-label="Username"
+                               aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+
+                        <span class="input-group-text">Ngày bắt đầu </span>
+                        <input type="date" th:value="*{createDate}" name="createDate" class="form-control"
+                               placeholder="nhập ngày tạo" aria-label="Username" aria-describedby="basic-addon1" readonly>
+                    </div>
+                    <div class="input-group mb-3">
+
+                        <span class="input-group-text">Trạng thái khuyến mãi : </span>
+
+                        <select class="input-group-text" id="btnGroupAddon" readonly name="discountType" th:value="*{discountType}">
+                            <option value="0" th:selected="*{discountType == 0}">Chưa hoạt động</option>
+                            <option value="1" th:selected="*{discountType == 1}">Đang hoạt động</option>
+                            <option value="2" th:selected="*{discountType == 2}">Ngừng hoạt động</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Tổng giá trị khuyến mãi  : </span>
+                        <input type="text" th:value="*{maximumDiscountAmount}" readonly name="maximumDiscountAmount" class="form-control"
+                               aria-label="Username"
+                               aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Số lượng  : </span>
+                        <input type="text" th:value="*{quantity}" readonly name="quantity" class="form-control"
+                               aria-label="Username"
+                               aria-describedby="basic-addon1" >
+                    </div>
+
+                    <div div class="input-group mb-3">
+                        <label for="discountValue" class="form-label">Giá trị khuyến mãi:</label>
+                        <div class="input-group">
+                            <input type="text" id="discountValue" name="discountValue" class="form-control" th:value="*{discountValue}">
+                            <select class="input-group-text" id="btnGroupAddon" name="discountType" th:value="*{discountType}">
+                                <option value="1" th:selected="*{discountType == 1}">%</option>
+                                <option value="0" th:selected="*{discountType == 0}">VND</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div style="margin-left: 70%">
+                        <a class="btn btn-danger" href="javascript:history.back()">Trở lại</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</html>

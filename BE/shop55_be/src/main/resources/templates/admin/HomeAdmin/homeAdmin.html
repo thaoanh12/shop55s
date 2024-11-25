@@ -1,0 +1,96 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<style>
+    .stat-section {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    .daily-invoice {
+        background-color: #f0f8ff;
+    }
+
+    .daily-revenue {
+        background-color: #ffe4e1;
+    }
+
+    .monthly-revenue {
+        background-color: #f5fffa;
+    }
+
+    .yearly-revenue {
+        background-color: #f0fff0;
+    }
+    .char{
+        max-width: 100%;
+        min-width: 300px;
+        min-height: 200px;
+    }
+</style>
+<div th:fragment="content" >
+    <div class="row">
+        <div class="col-md-3">
+            <div class="stat-section daily-invoice">
+                <h4 class="text-center">Hóa đơn trong ngày</h4>
+                <p th:text="${invoiceCount}" class="text-center" id="dailyInvoiceCount"></p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-section daily-revenue">
+                <h4 class="text-center">Doanh thu ngày</h4>
+                <p th:text="${#numbers.formatDecimal(dailyRevenue,3,'POINT' , 0 , 'COMMA')}+' VND'" class="text-center" id="dailyRevenue"></p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-section monthly-revenue">
+                <h4 class="text-center">Doanh thu tháng</h4>
+                <p th:text="${#numbers.formatDecimal(monthlyRevenue,3,'POINT' , 0 , 'COMMA')}+' VND'" class="text-center" id="monthlyRevenue"></p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-section yearly-revenue">
+                <h4 class="text-center">Doanh thu năm</h4>
+                <p th:text="${#numbers.formatDecimal(yearlyRevenue,3,'POINT' , 0 , 'COMMA')}+' VND'" class="text-center" id="yearlyRevenue"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <canvas id="revenueChar" class="char"></canvas>
+            <form th:href="@{/admin/}" method="post" style="display: flex">
+                <input type="number" name="year" min="1900" max="2099" step="1" th:value="*{year}" />
+                <input type="submit" value="Tìm" />
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:inline="javascript">
+    let monthlyRevenueInYear = /*[[${monthlyRevenueInYear}]]*/
+    const cxt = document.getElementById("revenueChar").getContext("2d")
+    const reveneuChart = new Chart(cxt,{
+        type: 'bar',
+        data:{
+            labels: Object.keys(monthlyRevenueInYear),
+            datasets: [{
+                label: 'Doanh thu',
+                data: Object.values(monthlyRevenueInYear),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options:{
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    })
+
+</script>
+</html>

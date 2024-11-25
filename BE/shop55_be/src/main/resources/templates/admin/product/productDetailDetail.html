@@ -1,0 +1,20 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<div th:fragment="content">
+    <h3>Thông tin Sản phẩm</h3>
+    <b>Mã: </b><span th:text="${productDetail.productDetailCode}"></span><br/>
+    <b>Tên sản phẩm: </b><span th:text="${productDetail.products.productName}"></span><br/>
+    <b>Giá: </b><span th:text="${productDetail.price}"></span><br/>
+    <b>Màu sắc: </b><span th:text="${productDetail.color.colorName}"></span><br/>
+    <b>Kích thước: </b><span th:text="${productDetail.size.sizeName}"></span><br/>
+    <b>Số lượng: </b><span th:text="${productDetail.quantity}"></span><br/>
+    <b>Ảnh</b><td><img th:src="${productDetail.thumbnail}" width="50px"></td><br>
+    <b>Trạng thái: </b>
+    <span>
+        <span th:if="${productDetail.productDetailStatus == 0}" style="color: green;font-weight: bold;">Còn hàng</span>
+        <span th:unless="${productDetail.productDetailStatus == 0}" style="color: red;font-weight: bold;">Hết hàng</span>
+    </span>
+    <br/>
+    <a class="btn btn-danger" href="javascript:history.back()">Trở lại</a>
+</div>
+
+</html>

@@ -1,0 +1,73 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<style>
+    .filter:hover .menu{
+        display: block;
+    }
+    .small-input {
+        width: 130px; /* Thay đổi kích thước tùy ý */
+    }
+</style>
+<div th:fragment="content">
+    <h3>Quản Lý Chất Liệu</h3>
+    <a th:href="@{/admin/fabrics-add}" type="button" class="btn btn-success">Thêm chất liệu</a>
+
+    <form th:action="@{/admin/fabric-seach}" method="get">
+        <input type="text" name="keyword" class="form-control small-input" placeholder="Nhập thông tin
+        " aria-label="Username" aria-describedby="basic-addon1">
+        <button type="submit" class="btn btn-info" style="margin-bottom: 0.5%">tìm kiếm </button>
+    </form>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tên Vải</th>
+            <th scope="col">Ngày Tạo </th>
+            <th scope="col">
+                Trạng thái
+                <i style="cursor: pointer" class="filter fa-solid fa-filter"
+                   data-bs-toggle="dropdown" aria-expanded="false"></i>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" th:href="@{/admin/status-fabric(status=0)}">đang hoạt động </a></li>
+                    <li><a class="dropdown-item" th:href="@{/admin/status-fabric(status=1)}">ngừng hoạt động </a>
+                    </li>
+                </ul>
+            </th>
+            <th scope="col">Chức năng</th>
+        </tr>
+
+        </thead>
+        <tbody>
+        <tr th:each="Fabrics,rowStat : ${page.content}">
+            <td th:text="${rowStat.index+1}"/>
+            <td th:text="${Fabrics.fabricName}"></td>
+            <td th:text="${Fabrics.createDate}"></td>
+            <td th:text="${Fabrics.fabricStatus== 0 ? 'đang hoạt động ' : 'ngừng hoạt động '}"></td>
+            <td>
+                <a th:href="@{/admin/view-update-fabric/{id}(id=${Fabrics.id})}" id="update" type="button" class="btn btn-info">
+                    <i class="fas fa-pencil-alt"></i> <!-- This is the pencil icon for update -->
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" th:href="@{${page}(p=${page.number - 1 < 0 ? 0 : page.number - 1})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="number : ${#numbers.sequence(0,page.totalPages-1)}">
+                <a th:if="${number >= 0 }" class="page-link" th:href="@{${url}(p=${number})}" th:text="${number+1}"></a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:href="@{${page}(p=${page.number + 1 >= page.totalPages ? page.totalPages - 1 : page.number + 1})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+
+</html>

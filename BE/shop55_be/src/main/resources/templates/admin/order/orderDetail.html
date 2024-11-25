@@ -1,0 +1,53 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<div th:fragment="content">
+    <h1>sản phẩm trong hóa đơn  </h1>
+
+    <div style="margin-top: 20px">
+        <div>
+            <h4 style="color: #ffba30">thông tin hóa đơn </h4>
+            <p><b>mã hóa đơn : </b><span th:text="${orderDetailT.orderCode}"></span></p>
+            <p><b>thời gian tạo :</b> <span th:text="${orderDetailT.createDate}"></span></p>
+            <p><b>tên khách hàng :</b> <span th:text="${orderDetailT.customer == null ? 'Khách Lẻ':orderDetailT.customer.fullName}"></span></p>
+            <p> <b>nhân viên tạo :</b> <span th:text="${orderDetailT.employee.fullName}"></span></p>
+            <p> <b>trạng thái :</b>
+                 <span th:if="${orderDetailT.orderStatus==1}"
+                       style="color: green;font-weight: bold;">đã thanh toán  </span>
+                <span th:if="${orderDetailT.orderStatus==0}" style="color: #dd1e1e;font-weight: bold;">chưa thanh toán  </span>
+            </p>
+        </div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Mã sản phẩm</th>
+            <th scope="col">Tên</th>
+            <th scope="col">Chất liệu</th>
+            <th scope="col">Màu sắc</th>
+            <th scope="col">kích thước</th>
+            <th scope="col">Số lượng</th>
+            <th scope="col">Giá sản phẩm</th>
+            <th scope="col">Giá sản sau giảm</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="orderDetai , rowstart : ${orderDetail}">
+            <th scope="row" th:text="${rowstart.index + 1}"></th>
+            <td  th:text="${orderDetai.productDetail.productDetailCode}"></td>
+            <td  th:text="${orderDetai.productDetail.products.productName}"></td>
+            <td  th:text="${orderDetai.productDetail.products.fabric.fabricName}"></td>
+            <td  th:text="${orderDetai.productDetail.color.colorName}"></td>
+            <td  th:text="${orderDetai.productDetail.size.sizeName}"></td>
+            <td  th:text="${orderDetai.productDetail.quantity}"></td>
+            <td  th:text="${orderDetai.productDetail.price}"></td>
+            <td  th:text="${orderDetai.totalAmount}"></td>
+            <td >
+                <button>hihi</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</html>

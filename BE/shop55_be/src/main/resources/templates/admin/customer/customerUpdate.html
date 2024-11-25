@@ -1,0 +1,67 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<div th:fragment="content">
+
+    <h1>Sửa thông tin Khách hàng</h1>
+    <div>
+        <form th:action="@{/admin/customer-update}" th:object="${customers}" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">ID : </span>
+                        <input type="text" th:value="*{id}" name="id" readonly class="form-control"
+                               aria-label="Username"
+                               aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Mã khách hàng  : </span>
+                        <input type="text" th:value="*{customerCode}" readonly name="customerCode" class="form-control"
+                               aria-label="Username"
+                               aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">họ tên : </span>
+                        <input type="text" th:value="*{fullName}" name="fullName" class="form-control"
+                               placeholder="nhập họ tên khách hàng " aria-label="Username"
+                               aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">email : </span>
+                        <input type="text" th:value="*{email}" readonly name="email" class="form-control"
+                               placeholder="nhập email khách hàng " aria-label="Username"
+                               aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">ngày tạo: </span>
+                        <input type="text" th:value="*{create_date}" class="form-control" disabled
+                               placeholder="nhập ngày tạo" aria-label="Username" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">số điện thoại  : </span>
+                        <input type="text" th:value="*{phoneNumber}" name="phoneNumber" class="form-control"
+                               placeholder="nhập số điện thoại khách hàng " aria-label="Username"
+                               aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Mật Khẩu   : </span>
+                        <input type="password" th:value="*{passcode}" readonly name="password" class="form-control"
+                               placeholder="nhập số điện thoại khách hàng " aria-label="Username"
+                               aria-describedby="basic-addon1">
+                    </div>
+                    trạng thái khách hàng : <br>
+                    <input type="radio" name="customerStatus" th:checked="${customers.customerStatus == 0}" th:value="0"/>
+                    đang hoạt động
+                    <input type="radio" name="customerStatus" th:checked="${customers.customerStatus == 1}" th:value="1"/>
+                    ngừng hoạt động <br>
+                    <div style="margin-left: 70%">
+                        <button type="submit" class="btn btn-primary">Sửa thông tin</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+</html>

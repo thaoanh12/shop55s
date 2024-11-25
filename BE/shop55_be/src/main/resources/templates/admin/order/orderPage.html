@@ -1,0 +1,69 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<div th:fragment="content">
+    <h1>Hóa đơn</h1>
+    <div class="unpaid-invoice card">
+        <div class="row">
+            <div id="frame-unpaid-invoice" class="col-10">
+                <table class="table-unpaid-invoice  table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Mã hóa đơn</th>
+                        <th scope="col">Thời gian tạo</th>
+                        <th scope="col">tên khách hàng</th>
+                        <th scope="col">Nhân viên</th>
+                        <th scope="col">trạng thái</th>
+                        <th scope="col">Chức năng</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="orderTrTag" th:each="order1,rowStart :${page.content}" th:id="order+${order1.id}">
+                        <th scope="row" th:text="${rowStart.index+1}"></th>
+                        <td th:text="${order1.orderCode}"></td>
+                        <td th:text="${order1.createDate}"></td>
+                        <td th:text="${order1.customer == null ? 'Khách lẻ':order1.customer.fullName}"></td>
+                        <td th:text="${order1.employee.fullName}"></td>
+                        <td>
+                            <span th:if="${order1.orderStatus==1}"
+                                  style="color: green;font-weight: bold;">đã thanh toán  </span>
+                            <span th:if="${order1.orderStatus==0}"
+                                  style="color: #dd1e1e;font-weight: bold;">hóa đơn chờ  </span>
+                            <span th:if="${order1.orderStatus==2}" style="color: #ff8c43;font-weight: bold;">chờ xác nhận   </span>
+                        </td>
+                        <td>
+                            <a th:if="${order1.orderStatus==1}" type="button"
+                               th:href="@{/admin/order-detail/{id}(id=${order1.id})}"
+                               class="btn btn-info"> <i class="fa-solid fa-eye"></i></a>
+                            <a th:if="${order1.orderStatus==2}" type="button"
+                               th:href="@{/admin/order-detail-confim/{id}(id=${order1.id})}"
+                               class="btn btn-warning"> <i class="bi bi-check-circle"></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link"
+                   th:href="@{${url}(p=${page.number - 1 < 0 ? page.totalPages - 1 : page.number - 1})}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="number : ${#numbers.sequence(0,page.totalPages-1)}">
+                <a th:if="${number >= 0}" class="page-link" th:href="@{${url}(p=${number})}" th:text="${number+1}"></a>
+            </li>
+            <li class="page-item">
+                <a class="page-link"
+                   th:href="@{${url}(p=${page.number + 1 > page.totalPages - 1 ? 0 : page.number + 1})}"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</html>

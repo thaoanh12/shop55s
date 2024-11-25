@@ -1,0 +1,76 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<div th:fragment="content">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <img th:src="${img}" width="100%" class="fancyProduct">
+            </div>
+            <form style="width: 60%;background-color: #ffffff;border-radius: 10px; padding: 10px"
+                  th:action="@{/add-to-cart}" th:object="${productDetail}"
+                  class="mx-auto" method="post" enctype="multipart/form-data">
+                <div class="col">
+                    <div class="form-group">
+                        <label >Sản Phẩm:</label>
+                        <p th:text="*{products.productName}"></p>
+                        <input th:value="*{products.id}" name="productId" type="hidden" id="productId">
+                        <input th:value="*{id}" name="productDetailId" type="hidden" id="productDetailId">
+                    </div>
+
+                    <div class="form-group">
+                        <label >Giá:</label>
+                        <p th:text="*{price}"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dropdownCategori">Màu sắc:</label>
+                        <select class="form-select" id="dropdownCategori" name="colorId" onchange="updateProduct()">
+                            <option th:each="color : ${colors}" th:value="${color.id}" th:text="${color.colorName}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dropdownFabric">Kích thước:</label>
+                        <select class="form-select" id="dropdownFabric" name="sizeId" onchange="updateProduct()">
+                            <option th:each="size : ${sizes}" th:value="${size.id}" th:text="${size.sizeName}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label >Số lượng:</label>
+                        <input type="number" th:value="${1}" class="form-control" style="width: 100px;" name="quantity">
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Thêm vào giỏ hàng</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        function updateProduct() {
+            var colorId = document.getElementById("dropdownCategori").value;
+            var sizeId = document.getElementById("dropdownFabric").value;
+            var productId = document.getElementById("productId").value;
+            localStorage.setItem("selectedColor", colorId);
+            localStorage.setItem("selectedSize", sizeId);
+            var url = '/product-detail/' + productId + '?colorId=' + colorId + '&sizeId=' + sizeId;
+            window.location.href = url;
+        }
+    </script>
+    <script th:inline="javascript">
+        window.onload = function() {
+            var selectedColor = localStorage.getItem("selectedColor");
+            var selectedSize = localStorage.getItem("selectedSize");
+            if (selectedColor !== null) {
+                document.getElementById("dropdownCategori").value = selectedColor;
+            }
+            if (selectedSize !== null) {
+                document.getElementById("dropdownFabric").value = selectedSize;
+            }
+        }
+    </script>
+</div>
+</html>

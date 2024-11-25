@@ -1,0 +1,173 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+
+<style>
+    .productAllConten {
+        display: flex;
+        justify-content: space-between;
+
+    }
+
+    .prpoductAlll {
+        padding-left: 2px;
+        padding-bottom: 5px;
+        margin-left: 50px;
+        margin-bottom: 40px;
+        margin-right: 50px;
+
+    }
+
+    .sanPham {
+        margin-left: 10px;
+        border-right: 2px solid #696969;
+    }
+
+    .item {
+        float: left;
+        width: 20%;
+    }
+    .image-container {
+        position: relative;
+        display: inline-block;
+    }
+    .gioHang {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .gioHanghot {
+        position: absolute;
+        top: 50%;
+        left: 25%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 1;
+
+    }
+    .image-container:hover .gioHang {
+        opacity: 1;
+    }
+    .image-container:hover .gioHanghot {
+        opacity: 1;
+    }
+    .productHot{
+        float: left;
+        margin-left: 2px;
+    }
+    .clearfix {
+        clear: both;
+    }
+
+</style>
+<div th:fragment="content">
+    <h1 style=" margin-top: 30px ; margin-bottom: 20px ; margin-left: 20px"> Sản Phẩm </h1>
+    <div style=" border-left: 7px solid #5d5d5d;margin-left: 20px ; background-color: #e5e5e5 ; margin-right: 30px ; margin-bottom: 10px">
+        <b>Shop55 : </b> <span>
+        là nơi cung cấp cho khác hàng những mẫu quần áo cao cấp, hiện đại, bắt kịp với thời đại cách mạng thời trang trên thế giới .<br>
+        Chúng tôi đồng hành và sát cánh bên khách hàng để có thể hỗ chợ tận tình và nhanh chóng nhất đến cho khách hàng .
+        Giup khách hàng dễ dàng chọn lựa những mẫu quần áo phù hợp tới cho mình .
+    </span>
+    </div>
+    <hr style="border: none; border-top: 2px dotted #5a5a5a; height: 3px;
+margin-left: 20px;margin-right: 30px;margin-bottom: 40px;
+">
+    <div class="productAllConten">
+        <div class="row sanPham item" style="width: 75%">
+            <div class="col-3 prpoductAlll image-container" th:each="productMensShirt,rowstat : ${productMensShirt.content}">
+                <p ><img style="width: 100% ; height: 400px" th:src="${productMensShirt.thumbnail}">
+                </p>
+                <input type="hidden" th:value="${productMensShirt.id}">
+                <p> Sản phẩm : <span style="text-align: center"
+                                     th:text=" ${productMensShirt.productName}+'-'
+                                        +${productMensShirt.productCode}"></span>
+                </p>
+                <p style=" text-align: center ; color: red"
+                   th:text="${#numbers.formatDecimal(productMensShirt.minPrice,3,'POINT' , 2 , 'COMMA')} + ' VNĐ'"></p>
+
+                <a style="font-size: 50px ; color: #ff9a9a"  class="gioHang">
+
+                <a style="font-size: 50px ; color: #ff9a9a" th:href="@{/product/{id}(id=${productMensShirt.id})}" class="gioHang">
+
+                    <i class="bi bi-cart-plus-fill" ></i></a>
+                <button style="margin-left: 190px;" type="button" class="btn btn-info"><a th:href="@{/product/{id}(id=${productMensShirt.id})}">xem chi
+                    tiết </a></button>
+            </div>
+            <div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item" >
+                            <a class="page-link"
+                               th:href="@{${url}(p=${productMensShirt.number > 0 ? productMensShirt.number - 1 : 0})}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item"
+                            th:each="number : ${#numbers.sequence(0,productMensShirt.totalPages-1)}">
+                            <a th:if="${number >= 0 }" class="page-link"
+                               th:href="@{${url}(p=${number})}"
+                               th:text="${number+1}"></a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link"
+                               th:href="@{${url}(p=${productMensShirt.number + 1 >= productMensShirt.totalPages ? productMensShirt.totalPages - 1 : productMensShirt.number + 1})}"
+                               aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="item" >
+            <div>
+                <from>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="nhập tên sản phẩm .. "
+                               aria-describedby="button-addon2">
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="bi bi-search"></i></button>
+                    </div>
+                </from>
+                <div style="float: left">
+                    <p> Lọc Sản Phẩm : </p>
+                </div>
+                <div style=" margin-left: 5px ;float: left" class="dropdown">
+                    <a style="text-decoration: none ; color: black" class="" href="#" role="button"
+                       id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-funnel-fill"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li><a th:href="@{/product-mens-filter-shirt}" class="dropdown-item"> giá tăng giần  </a></li>
+                        <li><a th:href="@{/product-filter-decrease}" class="dropdown-item"> giá giảm giần  </a></li>
+                    </ul>
+                </div>
+                <h4 style=" clear: both ; color: #f85656">Sản phẩm HOT <i style="color: #ff4d4d" class="bi bi-fire"></i></h4>
+                <div>
+                    <div class="image-container" th:each="productHomeSelLing,rowsta :${productHomeSelLing}">
+                        <div class="productHot">
+                            <img style="width: 160px ; height: 100px ; border-right: 1px solid black" th:src="${productHomeSelLing.thumbnail}">
+                        </div>
+                        <div class="productHot">
+                            <input type="hidden" th:value="${productHomeSelLing.id}">
+                            <span th:text="${productHomeSelLing.productName}+'-'
+                                        +${productHomeSelLing.productCode}"></span>
+                            <p style=" color: red"
+                               th:text="${#numbers.formatDecimal(productHomeSelLing.minPrice,3,'POINT' , 2 , 'COMMA')} + ' VNĐ'"></p>
+                        </div>
+                        <a style="font-size: 40px ; color: #ff9a9a" href="#" class="gioHanghot">
+                            <i class="bi bi-cart-plus-fill" ></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+    </div>
+
+
+</div>
+</html>

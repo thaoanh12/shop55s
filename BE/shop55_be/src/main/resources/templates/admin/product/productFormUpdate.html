@@ -1,0 +1,96 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en" >
+<style>
+    .error{
+        color: red;
+    }
+</style>
+<div th:fragment="content">
+    <h3>update sản phẩm</h3>
+    <form style="width: 60%;background-color: #ffffff;border-radius: 10px;
+    padding: 10px " th:action="@{/admin/product-update}" th:object="${newProduct}"
+          class="mx-auto" method="post" enctype="multipart/form-data">
+        <input th:value="*{id}" name="id"  type="hidden"  >
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="exampleInputProductName" class="form-label">Tên sản phẩm</label>
+                <input th:value="*{productName}" name="productName"  type="text" class="form-control" id="exampleInputProductName">
+                <p th:if="${#fields.hasErrors('productName')}" th:errorclass="error" th:errors="*{productName}" />
+            </div>
+            <div class="mb-3 col-6">
+                <label for="exampleInputNSX" class="form-label">Nới sản xuất</label>
+                <input th:value="*{madeIn}" name="madeIn" type="text" class="form-control" id="exampleInputNSX" >
+                <p th:if="${#fields.hasErrors('madeIn')}" th:errorclass="error" th:errors="*{madeIn}" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="exampleInputSDT" cla2ss="form-label">Mô tả</label>
+                <input th:value="*{productDescribe}" name="productDescribe" type="text" class="form-control" id="exampleInputSDT" >
+                <p th:if="${#fields.hasErrors('productDescribe')}" th:errorclass="error" th:errors="*{productDescribe}" />
+            </div>
+            <div class="mb-3 col-6">
+                <label for="exampleInputAddress" class="form-label">Trọng lượng</label>
+                <input th:value="*{weight}" name="weight" type="text" class="form-control" id="exampleInputAddress">
+                <p th:if="${#fields.hasErrors('weight')}" th:errorclass="error" th:errors="*{weight}" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="exampleInputFileImg" class="form-label">File ảnh</label>
+                <input name="image"
+                       onchange="previewImage()"
+                       type="file" class="form-control" id="exampleInputFileImg">
+            </div>
+            <div class="mb-3 col-6">
+                <img id="preview" th:src="*{thumbnail}" style="margin-top: 20px;
+    width: 70px"/>
+                <input th:value="*{thumbnail}" name="thumbnail" type="hidden">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label for="dropdownCategori">Danh mục:</label>
+                <select class="form-select" id="dropdownCategori"  name="categoryId">
+                    <option th:each="category : ${categoris}"  th:value="${category.id}" th:text="${category.categoryName}"></option>
+                </select>
+            </div>
+            <div class="mb-3 col-6">
+                <label for="dropdownFabric">Chất liệu:</label>
+                <select class="form-select" id="dropdownFabric"  name="fabricId">
+                    <option th:each="fabric : ${fabrics}"  th:value="${fabric.id}" th:text="${fabric.fabricName}"></option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<script th:inline="javascript">
+     function previewImage(){
+         var inputeFile = document.getElementById("exampleInputFileImg")
+         var preview = document.getElementById("preview")
+         if(inputeFile.files && inputeFile.files[0]){
+              var reader = new FileReader()
+             reader.onload = function (e){
+                  preview.src = e.target.result
+             }
+             reader.readAsDataURL(inputeFile.files[0])
+         }
+     }
+     var product = /*[[${newProduct}]]*/
+     fetch("http://localhost:3000/country").then(res => res.json()).then(data => {
+         let arr  = [...data]
+         console.log(product)
+         arr.map(value => {
+             var option = document.createElement("option")
+             option.value = value
+             option.text = value
+             if(product.madeIn === value){
+                 option.selected = true
+             }
+             document.getElementById("exampleMadeIn").appendChild(option)
+         })
+     })
+</script>
+</html>

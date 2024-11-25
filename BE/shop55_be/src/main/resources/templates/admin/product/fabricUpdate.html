@@ -1,0 +1,37 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<style>
+    .error {
+        color: red;
+    }
+</style>
+<div th:fragment="content">
+    <h3>Cập Nhật Chất Liệu</h3>
+    <form style="width: 60%;background-color: white;border-radius: 10px; padding: 10px"
+          th:action="@{/admin/fabrics-update}" method="post" th:object="${newFabric}" class="mx-auto">
+
+        <div class="row">
+            <input   th:field="*{id}" type="hidden" class="form-control" id="exampleColorInput">
+
+            <div class="mb-3 col-6">
+                <label for="exampleColorInput" class="form-label">Tên loại</label>
+                <input th:field="*{fabricName}" type="text" class="form-control" id="exampleColorInput">
+                <p th:if="${#fields.hasErrors('fabricName')}" class="error" th:errors="*{fabricName}"></p>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="mb-3 col-6">
+                <input type="radio" value="0" th:field="*{fabricStatus}" id="flexRadioDefault1">
+                <label class="form-check-label" for="flexRadioDefault1">Đang hoạt động</label>
+                <input type="radio" value="1" th:field="*{fabricStatus}" id="flexRadioDefault2">
+                <label class="form-check-label" for="flexRadioDefault2">Ngừng hoạt động</label>
+            </div>
+
+        </div>
+        <button type="submit" class="btn btn-primary">Cập Nhật</button>
+    </form>
+</div>
+<script th:inline="javascript">
+    // JavaScript code for handling provinces, districts, and communes (unchanged)
+</script>
+</html>

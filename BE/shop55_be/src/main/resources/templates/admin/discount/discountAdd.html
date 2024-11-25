@@ -1,0 +1,102 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<div th:fragment="content">
+    <div id="error-message"></div>
+    <form style="width: 60%;background-color: white;border-radius: 10px;
+    padding: 10px " th:action="@{/admin/discount-creat}" class="mx-auto" method="post" th:object="${discount}">
+        <div class="row">
+            <div class="col-6 mb-3">
+                <label for="discountCode" class="form-label">Mã khuyến mãi</label>
+                <input type="text" id="discountCode" name="discountCode" class="form-control"
+                       th:value="*{discountCode}">
+                <p style="color: red" th:if="${#fields.hasErrors('discountCode')}" th:errorclass="error"
+                   th:errors="*{discountCode}"/>
+            </div>
+
+
+            <div class="col-6 mb-3">
+                <label for="createDate" class="form-label">Ngày bắt đầu:</label>
+                <input type="date" id="createDate" name="createDate" class="form-control" th:value="*{createDate}">
+                <div th:if="${thongbao != null}">
+                    <p th:text="${thongbao}"></p>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label for="discountValue" class="form-label">Giá trị khuyến mãi:</label>
+                    <div class="input-group">
+                        <input type="number" id="discountValue" name="discountValue" oninput="tinhBoi()" class="form-control"
+                               th:value="*{discountValue}">
+                        <select class="input-group-text" id="btnGroupAddon" name="discountType" onchange="tinhBoi()">
+                            <option value="1">%</option>
+                            <option value="0">VND</option>
+                        </select>
+                    </div>
+                    <div th:if="${errorMessage != null}">
+                        <p th:text="${errorMessage}"></p>
+                    </div>
+                    <div th:if="${abc != null}">
+                        <p th:text="${abc}"></p>
+                    </div>
+                </div>
+                <div class="col-6 mb-3">
+                    <label for="maximumDiscountAmount" class="form-label">Tổng giá trị khuyến mãi</label>
+                    <input type="number" id="maximumDiscountAmount" name="maximumDiscountAmount" onchange="tinhBoi()" class="form-control"
+                           th:value="*{maximumDiscountAmount}">
+                </div>
+                <div th:if="${errorMessages != null}">
+                    <p th:text="${errorMessages}"></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label for="quantity" class="form-label">Số lượng khuyến mãi</label>
+                    <input type="number" id="quantity" name="quantity" class="form-control"
+                           th:value="*{quantity}">
+<<<<<<< HEAD
+<!--                    <div id="quantity"></div>-->
+<!--                    <p style="color: red" th:if="${#fields.hasErrors('discountCode')}" th:errorclass="error"-->
+<!--                       th:errors="*{discountCode}"/>-->
+                </div>
+<!--                <div class="col-6 mb-3">-->
+<!--                    <label for="describe" class="form-label">Mô tả khuyến mãi</label>-->
+<!--                    <input type="text" id="describe" name="describe" class="form-control"-->
+<!--                           th:value="*{describe}">-->
+<!--&lt;!&ndash;                    <p style="color: red" th:if="${#fields.hasErrors('discountCode')}" th:errorclass="error"&ndash;&gt;-->
+<!--&lt;!&ndash;                       th:errors="*{discountCode}"/>&ndash;&gt;-->
+<!--                </div>-->
+=======
+                    <!--                    <div id="quantity"></div>-->
+                    <!--                    <p style="color: red" th:if="${#fields.hasErrors('discountCode')}" th:errorclass="error"-->
+                    <!--                       th:errors="*{discountCode}"/>-->
+                </div>
+                <!--                <div class="col-6 mb-3">-->
+                <!--                    <label for="describe" class="form-label">Mô tả khuyến mãi</label>-->
+                <!--                    <input type="text" id="describe" name="describe" class="form-control"-->
+                <!--                           th:value="*{describe}">-->
+                <!--&lt;!&ndash;                    <p style="color: red" th:if="${#fields.hasErrors('discountCode')}" th:errorclass="error"&ndash;&gt;-->
+                <!--&lt;!&ndash;                       th:errors="*{discountCode}"/>&ndash;&gt;-->
+                <!--                </div>-->
+>>>>>>> 22d2e53d7829d961d186f706012ee8629fc42e93
+            </div>
+        </div>
+
+        <input type="submit" value="Thêm khuyến mãi" class="btn btn-primary">
+    </form>
+</div>
+<script th:inline="javascript">
+    function tinhBoi() {
+
+        var tongGiaTri = parseInt(document.getElementById("maximumDiscountAmount").value);
+        var giaTri = parseInt(document.getElementById("discountValue").value);
+
+        var boi = Math.floor(tongGiaTri / giaTri);
+        document.getElementById("quantity").value = boi;
+    }
+</script>
+
+
+</html>
